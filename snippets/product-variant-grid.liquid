@@ -1,0 +1,19 @@
+{% if variant.image %}
+  <div class="grid-view-item__image-wrapper product-card__image-wrapper">
+    <div class="grid-view-item__image lazyload"
+         data-src="{{ variant.image.src | img_url: '300x300' }}"
+         data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+         data-aspectratio="{{ variant.image.aspect_ratio }}"
+         data-sizes="auto"
+         alt="{{ variant.image.alt | escape }}">
+    </div>
+  </div>
+{% endif %}
+
+<div class="h4 grid-view-item__title product-card__title" aria-hidden="true">
+  {{ product.title }} - {{ variant.title }}
+</div>
+
+<div class="grid-view-item__meta">
+  {% include 'product-price-listing', variant: variant, show_vendor: show_vendor %}
+</div>

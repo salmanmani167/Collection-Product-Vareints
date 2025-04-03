@@ -1,5 +1,17 @@
 {% comment %}
-  The contents of the collection.with-variants.liquid template can be found in /sections/collection-variants-template.liquid
+  Collection template that displays variants as individual products
 {% endcomment %}
 
-{% section 'collection-variants-template' %}
+{% section 'collection-template' %}
+
+{% stylesheet %}
+.product-variant-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-variant-card .grid-view-item__image-wrapper {
+  margin-bottom: 15px;
+}
+{% endstylesheet %}

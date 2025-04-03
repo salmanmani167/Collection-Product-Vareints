@@ -35,7 +35,7 @@
              data-bgset="{% include 'bgset', image: collection.image %}"
              data-sizes="auto"
              data-parent-fit="cover"
-             style="background-image: url('{{ collection.image | img_url: '300x300' }});"></div>
+             style="background-image: url('{{ collection.image | img_url: '300x300' }}');"></div>
         <noscript>
           <div class="collection-hero__image" style="background-image: url({{ collection.image | img_url: '2048x600', crop: 'top' }});"></div>
         </noscript>
@@ -155,9 +155,23 @@
 
       <ul class="grid grid--uniform{% if collection.products_count > 0 %} grid--view-items{% endif %}">
         {% for product in collection.products %}
-          <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
-            {% include 'product-card-grid', max_height: max_height %}
-          </li>
+          {% assign template_suffix = template.suffix %}
+          {% if template_suffix == 'with-variants' and product.variants.size > 1 %}
+            {% for variant in product.variants %}
+              <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
+                <div class="grid-view-item product-card product-variant-card">
+                  <a class="grid-view-item__link grid-view-item__image-container full-width-link" href="{{ product.url }}?variant={{ variant.id }}">
+                    <span class="visually-hidden">{{ product.title }} - {{ variant.title }}</span>
+                  </a>
+                  {% include 'product-variant-grid', variant: variant, product: product, show_vendor: section.settings.show_vendor %}
+                </div>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
+              {% include 'product-card-grid', max_height: max_height %}
+            </li>
+          {% endif %}
         {% else %}
           {% comment %}
           Add default products to help with onboarding for collections/all only.
@@ -194,9 +208,20 @@
     {% else %}
       <ul class="list-view-items">
         {% for product in collection.products %}
-          <li class="list-view-item">
-            {% include 'product-card-list', product: product %}
-          </li>
+          {% assign template_suffix = template.suffix %}
+          {% if template_suffix == 'with-variants' and product.variants.size > 1 %}
+            {% for variant in product.variants %}
+              <li class="list-view-item">
+                <a href="{{ product.url }}?variant={{ variant.id }}" class="list-view-item__link">
+                  {% include 'product-variant-list', variant: variant, product: product, show_vendor: section.settings.show_vendor %}
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="list-view-item">
+              {% include 'product-card-list', product: product %}
+            </li>
+          {% endif %}
         {% else %}
 
           {% comment %}
